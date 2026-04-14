@@ -1,0 +1,24 @@
+2. Column & Expression Functions
+- col()
+  Reference an existing column in a DataFrame.  
+- lit() – create literal values
+  Purpose: Create a literal value (constant) to use in expressions.
+  Usage: Useful when you want to add a constant column or compare against a fixed value.
+  df.withColumn('Increment_salary', col('salary') * lit(5))
+  df.withColumn('country',  lit('INDIA'))
+------------------------------------------------------------------------------------------------------------------
+- alias() – rename columns
+  df.select(col('capital').alias('country'))
+-------------------------------------------------------------------------------------------------------------------------
+- expr() – SQL expressions inside DataFrame API
+  Works on a single column expression whereas selectExpr() works on Works on multiple SQL expressions
+  df.withColumn("Increment_salary", expr("salary * 5"))
+  df.select(expr('salary')*5.alias('Increment_salary'))
+-----------------------------------------------------------------------------------------------------------------------
+- when(), otherwise() – conditional logic
+ df.withColumn(
+    "category",
+    when(col("age") < 18, "Minor")
+    .when((col("age") >= 18) & (col("age") < 60), "Adult")
+    .otherwise("Senior Citizen")
+   )
