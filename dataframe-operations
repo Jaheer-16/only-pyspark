@@ -1,0 +1,34 @@
+1. DataFrame Operations
+- select(), selectExpr() – project columns or SQL-like expressions
+  df.select(col(column1))
+  -  Here you must import functions like col
+  ------------------------------------------------------------------------------------------------------
+-  selectExpr()
+  - SQL-like syntax without importing functions 
+  df.selectExpr('name','salary * 0.5 AS increment_sal')
+  -------------------------------------------------------------------------------------------------------
+- filter() / where() – both are for row filtering and functionaly identical
+  from pyspark.sql.functions import col
+  df.filter((col("age") >= 18) | (col("quota") == "special"))
+  df.where((col("age") >= 18) | (col("quota") == "special"))
+  ----------------------------------------------------------------------------------------------------------
+- withColumn() – add or transform columns
+  df.withColumn('new_column',expression)
+  from pyspark.sql.functions import col
+  df.withColumn("increment_sal", col("salary") * 0.1)
+  -----------------------------------------------------------------------------------------------------------
+- drop() – remove one or more columns
+  df.drop("age", "salary")
+- distinct() – is used to remove duplicate rows from a DataFrame — it returns only the unique rows.
+  df.distinct()
+  df.select("name").distinct()
+    (or)
+  df.dropDuplicates(["name"])
+  --------------------------------------------------------------------------------------------------------
+- orderBy() / sort() – sorting both are same 
+  df.orderBy(col("salary").desc(), col("name").asc())
+  df.sort(col("salary").desc()).show()
+ 
+ 
+ In PySpark, DataFrame operations are the transformations and actions 
+ you can perform on a DataFrame to manipulate, query, and analyze data.
