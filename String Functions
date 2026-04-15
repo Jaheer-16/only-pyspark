@@ -1,0 +1,32 @@
+3. String Functions
+- concat(), concat_ws() – combine strings OR multiple columns
+  concat()-> Concatenates multiple columns or string expressions without any separator.
+  df.withColumn('Full_name',concat(col(first_name),col(last_name)))
+  concat_ws(separator,*cols)->Concatenates multiple columns or strings with a specified separator
+  df.withColumn('Full_name',concat_ws(" ",col(first_name),col(last_name)))
+------------------------------------------------------------------------------------------------------------
+- lower(), upper() – case transformations
+  lower() and upper() from pyspark.sql.functions to perform case transformations on string columns.
+  df.withColumn('UPPER_LETTER',upper(col('name')))
+-----------------------------------------------------------------------------------------------------------
+- regexp_replace(), regexp_extract() – regex operations-with regexp_replace() you can replace matched patterns not only with an empty string (to remove them), but also with any other text you choose.
+
+  df.withColumn('clean_data',regexp_replace(col('name'),'([0-9]+)',""))
+  
+  df.withColumn('unwanted_data',regexp_extract(col('name'),'([0-9]+)',1))
+  
+  
+  df.withColumn('year',regexp_extract(col('date'),'([0-9]{4}-[0-9]{2}-[0-9]{2})',1))
+  df.withColumn('month',regexp_extract(col('date'),'([0-9]{4}-[0-9]{2}-[0-9]{2})',2))
+  df.withColumn('day',regexp_extract(col('date'),'([0-9]{4}-[0-9]{2},-[0-9]{2})',3))
+----------------------------------------------------------------------------------------------------------------
+- substring() – extract substrings(regexp_replace is pattern based ,substring is position based)
+ df.withColumn('phn-number',substring(col('phn-number'),4,10))
+
+-------------------------------------------------------------------------------------------------------------
+- Split()
+  df_split = df.withColumn("parts", split(col("phone"), "-"))
+  input-[987-654-3210]
+  output->[987,654,3210] RETURNS YOU A LIST
+  to access use getItem(index)
+--------------------------------------------------------------------------------------------------------
