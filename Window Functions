@@ -1,0 +1,25 @@
+6. Window Functions
+- row_number(), rank(), dense_rank() – ranking
+ df.withColumn('ids',row_number().over(Window.partitionBy('customer_id').orderBy(col('Salary').desc())))
+ df.withColumn('rnk',rank().over(Window.partitionBy('dept').orderBy(col('salary').desc())))
+ df.withColumn('rnk',dense_rank().over(Window.partitionBy('dept').orderBy(col('salary').desc())))
+---------------------------------------------------------------------------------------------------------- 
+- lead(), lag() – look ahead/behind in partitions
+  lead(colum_name,offset,default)->offset by deafult 1
+ df.withColumn('Next_Value',lead('percentage').over(Window.partitionBy('customer_id').orderBy(col('percentage')))
+ df.withColumn('Last_twomonth_perf',lag('percentage',2,'NA').over(Window.partitionBy('customer_id').orderBy(col('percentage')))
+------------------------------------------------------------------------------------------------------------
+- ntile() – bucket rows into groups
+ df.withColumn('bucket',ntile(3).over(Window.partitionBy('customer_id').orderBy(col('salary').desc())))
+-----------------------------------------------------------------------------------------------------------
+ -rowsBetween(start,end)- NOTE — in rowsBetween(start, end) the start must always be less than or equal to the end.
+
+ df.withColumn('running_total',sum('amount').over(Window.orderBy('amount').rowsBetween(Window.unboundedPreceding,Window.currentRow)))
+ 
+ -rangeBetween(start,end)-count based on the range (usefull when duplicate values in your ordering column )
+ 
+ df.withColumn('range_total',sum('amount').over(Window.orderBy('amount').rangeBetween(Window.unboundedPreceding, Window.currentRow)
+))
+ 
+ 
+ frame based
