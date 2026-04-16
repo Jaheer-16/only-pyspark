@@ -1,0 +1,39 @@
+4. Date & Time Functions
+- current_date(), current_timestamp() – get system date/time
+  current_date() → Returns the current system date (without time).
+  current_timestamp() → Returns the current system date and time (with time zone).
+-------------------------------------------------------------------------------------------------------------
+- datediff(), months_between() – calculate differences
+   datediff(end, start)
+   Returns the number of days between two dates.
+   if column is in string then
+   df.withColumn('days_diff',datediff(to_date(col('end_date')),to_date(col('start_date'))))
+   
+   months_between(end, start)
+   df.withColumn('month_diff',months_between(col('end_date'),col('start_date')))
+---------------------------------------------------------------------------------------------------------------
+- date_add(), date_sub() – manipulate dates
+  date_add(start_date, num_days) → Returns a new date by adding num_days to start_date.
+  df.withColumn('add_days',date_add(col('column1'),5))
+  
+  date_sub(start_date, num_days) → Returns a new date by subtracting num_days from start_date.
+  df.withColumn('sub_days',date_sub(col('column1'),5))
+----------------------------------------------------------------------------------------------------------------
+- year(), month(), dayofweek() – extract components
+  df = df.withColumn("year", year(col("date"))) \
+       .withColumn("month", month(col("date"))) \
+       .withColumn("day_of_week", dayofweek(col("date")))
+---------------------------------------------------------------------------------------------------------------
+-add_months(col,n)
+  df.withColumn("plus_2_months", add_months(col("start_date"), 2)) \
+       .withColumn("minus_3_months", add_months(col("start_date"), -3))
+--------------------------------------------------------------------------------------------------------------
+-date_format(col,format) ALWAYS RETURNS YOU A STRING 
+  date_format(col('date'),'mm-dd-yyyy')
+--------------------------------------------------------------------------------------------------------
+  to_date(col,pattern)
+- to_date(col) without a pattern:
+Spark will try to parse the string using its default format → "yyyy-MM-dd".
+So if your column contains "2026-04-16", it will successfully convert to a DateType.
+- If the string is in another format (like "04-16-2026" or "16/04/2026"), then you must supply the correct pattern. Otherwise, Spark will return null because it can’t parse the string properly.
+--------------------------------------------------------------------------------------------------------
