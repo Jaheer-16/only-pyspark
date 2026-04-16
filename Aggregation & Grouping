@@ -1,0 +1,14 @@
+5. Aggregation & Grouping
+- groupBy().agg() – group and aggregate
+ df.groupBy('name').agg(sum('salary'))
+- count(), sum(), avg(), max(), min() – basic aggregations
+-----------------------------------------------------------------------------------------------------
+- collect_list(), collect_set() – gather values into arrays/- Collects values into a list (array).
+
+  df.groupBy('Dept').agg(collect_list('emp_name').alias('employee_name'))
+  Notice duplicates are kept and order is preserved
+  
+  collect_set()
+  df.groupBy('Dept').agg(collect_set('emp_name').alias('employee_name'))
+  Duplicates removed, but order is not guaranteed
+--------------------------------------------------------------------------------------------------------
