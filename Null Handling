@@ -1,0 +1,29 @@
+
+7. Null Handling
+- coalesce() – first non-null value-. It will always return the first non‑null value in the order you specify
+  df.withColumn('Non-null',coalesce(col('a'),col('b'),lit('Unknown')))
+--------------------------------------------------------------------------------------------------------------
+- fillna(), dropna() – handle missing values
+ fillna()--> quick replacement of missing value
+ df.fillna('unknown')--->here only string is replaced  /df.fillna('unknown',subset=(['city']))
+ df.fillna(0)-->here only int is replaced
+ df.fillna({'id':10,'name':'empty'})
+--------------------------------------------------------------------------------------------------------------
+- dropna()-dropna() is used to remove rows that contain null values.
+  dropna(how='any',subset=None)  by default
+  
+  df.dropna()-->remove rows with nulls
+  df.dropna(subset=['city'])-->remove rows for only city column with null
+  df.dropna(how='all',subset=['city','phn_num'])-->remove if two columns are null
+  df.dropna(thresh=2)-->keep rows with atleast 2 non values
+--------------------------------------------------------------------------------------------------------------
+- isnull(), isnotnull() – check nulls
+- isNull() → detect missing values.
+- isNotNull() → detect valid values.
+- Commonly used in filters, conditional replacements, counts, and data quality checks.
+
+  df_valid = df.filter(col("id").isNotNull())
+  df_flagged = df.withColumn(
+    "missing_flag",
+    when(col("city").isNull() | col("phn_num").isNull(), 1).otherwise(0))
+----------------------------------------------------------------------------------------------------------------
