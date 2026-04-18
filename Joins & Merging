@@ -1,0 +1,34 @@
+9. Joins & Merging
+- join() – inner, left, right, full joins
+  df1.join(df2,df1.id==df2.cust_id,'inner/left/right')
+  df1.join(df2, df1.id == df2.cust_id, "outer")
+  
+- left_semi
+  df1.join(df2,df1.id == df2.cust_id,'left_semi') ->it will keep only rows that matches in df2 but wont include df2 columns
+- left_anti
+  df1.join(df2,df1.id == df2.cust_id,'left_anti')  -> it will keep only rows from df1 where match not exist in df2
+- cross join (cartesian products)
+  df1.join(df2)
+----------------------------------------------------------------------------------------------------------------------------
+- union(), unionByName() – combine DataFrames
+  union()
+ Combines two DataFrames with the same schema (same number of columns, same order, same data types).
+ Columns must be in the exact same order.
+ If schemas don’t match → you’ll get an error.
+ df1.union(df2)
+ 
+ unionByName()
+ df1.unionByName(df2,allowMissingColumns=True)
+ 
+ df1.unionByName(df2,allowMissingColumns=True).distinct()
+ 
+ NOTE: TO REMOVE DUPLICATES WE NEED TO ADD distinct()
+----------------------------------------------------------------------------------------------------------------------------
+- intersect(), exceptAll() – set operations
+  intersection of two DataFrames, meaning only the rows that are present in both DataFrames (duplicates removed).
+  df1.intersect(df2)
+  df1.exceptAll(df2)-df1 that are not present in df2, but unlike except(), it preserves duplicates.
+  
+  df_except = df1.exceptAll(df2)   # keeps duplicates
+  df_exceptDistinct = df1.except(df2)  # removes duplicates
+----------------------------------------------------------------------------------------------------------------------------
