@@ -1,0 +1,27 @@
+8. Array & Map Functions-They’re extremely useful when working with nested or complex data structures
+    array allows column to store array of elements of the same data type
+	
+-  explode() – flatten arrays
+   df=df.withColumn('Tags',explode(col('Tags')))
+--------------------------------------------------------------------------------------------------------------------------
+-  explode_outer() - it preserves null and empty arrays instead of dropping them.
+   df=df.withColumn('Tags',explode_outer(col('Tags')))
+--------------------------------------------------------------------------------------------------------------------------
+-  pos_explode() - in PySpark is like explode(), but it also gives you the position (index) of each element
+   in the array along with the element itself.
+   df=df.withColumn('Tags',posexplode(col('Tags)))
+-------------------------------------------------------------------------------------------------------------------------  
+-  size() – length of array
+   df=df.withColumn('length',size(col('Tags')))
+-------------------------------------------------------------------------------------------------------------------------
+- map_keys()- → Returns an array of all keys in the map, map_values() – → Returns an array of all values in the map.
+  
+  df.withColumn('Keys',map_keys(col('col1')))
+  df.withColumn('values',map_values(col('col1')))
+-------------------------------------------------------------------------------------------------------------------------
+-  array()
+   df=df.withColumn('full_name',array(col('first_name'),col('last_name')))
+-------------------------------------------------------------------------------------------------------------------------
+- array_contains()
+   df=df.filter(array_contains(col('col1'),'shaik'))
+-------------------------------------------------------------------------------------------------------------------------
