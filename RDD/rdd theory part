@@ -41,5 +41,19 @@ distinct() → removes duplicates.
 3-Chooses the most efficient physical plan (e.g., deciding whether to use a broadcast join or a shuffle join).
 4-Generates optimized bytecode for execution through whole‑stage codegen.
 
+**CACHE AND PERSIST 
+cache will hold rdd/dataframe in ram instead of disk, this will result fastness.
+cache will use Ram only ,its suitable for small and limited dataset. if incase memory wont fits for our datset then it will take only the data which fits and rest of data is recomputeted when it needed.
+syntax-->df.cache() or rdd.cache()
+
+persist is best for large dataset, where it will hold data in ram which fits in and rest of the data spill into hard disk, by using both ram and harddisk we will acheive persist
+
+Use cache() for small datasets where speed is critical.
+Use persist() for large datasets, because it balances RAM and disk, ensuring stability and avoiding costly recomputation.
+syntax-->rdd.persist(StorageLevel.MEMORY_AND_DISK)
+         df.persist(StorageLevel.MEMORY_AND_DISK)
+		 
+NOTE-rdd.cache()   # equivalent to rdd.persist(StorageLevel.MEMORY_ONLY)
+
 
 
