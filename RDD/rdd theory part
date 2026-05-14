@@ -1,0 +1,45 @@
+RDD- RESILIENT DATA STRUCTURE
+
+*RDD is the fundamental data structure in Spark.
+*Immutable → Once created, RDDs cannot be changed. Any operation produces a new RDD.
+*Distributed → Data is split into partitions across the cluster for parallel processing.
+*Resilient → Fault‑tolerant through lineage. If a partition is lost, Spark can recompute it using the DAG of transformations.
+*Fault tolerance means the ability of a system to continue working correctly even when part of it fails.  Fault tolerance in Spark is achieved through lineage information
+*Lazy Evaluation → Transformations (map, filter, etc.) are recorded but not executed until an action (collect, count, save) is triggered.
+*In‑Memory Computation → RDDs can be cached/persisted in memory, which speeds up iterative algorithm
+
+data=[1,2,3,4,5]
+rdd=sc.parallelize(data)
+rdd.collect()
+sc refers to the sparkcontext object. it’s the entry point to the lower‑level spark api (rdds) and is responsible for connecting your application to the spark cluster
+
+parallelize distributes your local data into an RDD across the cluster.
+
+*Lineage = logical record of transformations.
+*DAG = the structured graph Spark builds from that lineage to plan execution/ DAG is the physical representation of lineage.
+
+**Narrow Transformations-
+it doesnt demand the shuffle
+output partition depends only on input partition
+No data moves b/w the partitions
+map(),filterMap(),filter()
+
+**Wide Transformations-
+it demands shuffle
+output partition depends on multiple input partitions
+data movement takes place between partitions
+reduceByKey() → aggregates values by key.
+groupByKey() → groups values by key.
+join() → combines two RDDs by key.
+distinct() → removes duplicates.
+
+
+**The Catalyst Optimizer is an internal query optimizer inside Spark SQL. You don’t interact with it directly, but every time you run a DataFrame or SQL query, Catalyst automatically:
+
+1-Builds a logical plan from your code.
+2-Applies rule‑based optimizations (like pushing filters closer to the data source, pruning unused columns, simplifying expressions).
+3-Chooses the most efficient physical plan (e.g., deciding whether to use a broadcast join or a shuffle join).
+4-Generates optimized bytecode for execution through whole‑stage codegen.
+
+
+
