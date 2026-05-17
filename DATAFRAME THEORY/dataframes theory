@@ -1,0 +1,22 @@
+DATAFRAME
+
+*Dataframe is a structure of data where its built on top of rdd for big data anyalsis where we can infer schema by that we can easily query and do transformations in a large scale
+*The Catalyst Optimizer is built into Spark’s SQL engine, and whenever you use DataFrames
+
+How Catalyst works with DataFrames
+
+Logical Plan: When you write a transformation (like select, filter, groupBy), Spark first builds a logical plan of what you want to do.
+
+Optimization: Catalyst then applies rules to simplify and optimize that plan (e.g., removing unnecessary steps, reordering filters, combining operations).
+
+*Physical Plan: Finally, Spark generates the most efficient physical plan to execute across the cluster.
+
+*Execution: The optimized plan runs, giving you faster results compared to raw RDD operations.
+
+*Beyond Catalyst, DataFrames also use Tungsten Execution Engine, which optimizes memory usage and CPU efficiency
+
+*You can easily load data from multiple sources (CSV, JSON, Parquet, Hive, SQL databases).
+
+*You can also run SQL queries directly on DataFrames using spark.sql().
+
+*We use DataFrames because they are schema-aware, optimized by Catalyst and Tungsten, easier to query with SQL-like syntax, and integrate seamlessly with Spark’s ecosystem. They give both developer productivity and performance at scale
