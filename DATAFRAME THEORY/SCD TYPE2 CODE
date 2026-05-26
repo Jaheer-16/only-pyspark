@@ -1,0 +1,82 @@
+STEP-1:
+CREATE TABLE dim_employee(
+
+  employeeid INT,
+  empname STRING,
+  city STRING,
+  start_date DATE,
+  end_date DATE,
+  is_active STRING
+)
+ USING DELTA;
+ 
+
+STEP-2:
+
+INSERT INTO dim_employee VALUES
+
+(1, 'John', 'Delhi', '2024-01-01', NULL, 'Y'),
+(2, 'Alice', 'Mumbai', '2024-01-01', NULL, 'Y'),
+(3, 'Bob', 'Pune', '2024-01-01', NULL, 'Y')
+
+
+STEP3:
+
+CREATE OR REPLACE TEMP VIEW staging_employee AS
+SELECT * FROM VALUES
+(2, 'Alice', 'Bangalore'),
+(4, 'Sam', 'Chennai')
+AS staging(employeeid,empname,city);
+
+STEP 4:
+
+DETECTING RECORDS WHICH ARE OUTDATED
+
+MERGE INTO dim_employee AS tgt
+USING staging_employee AS src
+ON tgt.employeeid=src.employeeid
+AND tgt.is_active='Y'
+
+WHEN MATCHED AND (tgt.city<>src.city OR tgt.empname<>src.empname)
+THEN UPDATE 
+SET
+tgt.end_date=Current_date(),
+tgt.is_active='N';
+
+
+INSERT INTO dim_employee 
+SELECT
+ src.employeeid,
+ src.empname,
+ src.city,
+ current_date() AS start_date,
+ NULL AS end_date,
+ 'Y' AS is_active
+ FROM
+ staging_employee src
+ LEFT JOIN dim_employee AS tgt
+ ON src.employeeid=tgt.employeeid
+ AND tgt.is_active='Y'
+ WHERE tgt.employeeid IS NULL;
+ 
+ 
+ 
+ OR
+ 
+ WHEN NOT MATCHED
+THEN INSERT (
+  emp_id,
+  name,
+  city,
+  start_date,
+  end_date,
+  is_active
+)
+VALUES (
+  src.emp_id,
+  src.name,
+  src.city,
+  current_date(),
+  NULL,
+  'Y'
+);
