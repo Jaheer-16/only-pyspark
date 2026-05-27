@@ -1,0 +1,18 @@
+MERGE INTO dim_employee AS tgt
+USING staging_employee AS src
+ON tgt.employeeid=src.employeeid
+
+
+WHEN MATCHED AND (tgt.city<>src.city OR tgt.empname<>src.empname)
+THEN UPDATE 
+SET
+tgt.city=src.city,
+tgt.empname=src.empname;
+
+WHEN NOT MATCHED
+THEN
+INSERT
+(employeeid,
+ empname,
+ city
+)Values(src.employeeid,src.empname,src.city)
