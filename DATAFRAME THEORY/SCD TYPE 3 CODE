@@ -1,0 +1,22 @@
+MERGE INTO dim_employee AS tgt
+USING staging_employee AS src
+ON tgt.employeeid = src.employeeid
+
+WHEN MATCHED AND (
+    tgt.city <> src.city
+)
+THEN UPDATE SET
+    tgt.prev_city = tgt.city,   -- store old value
+    tgt.city      = src.city    -- update new value
+
+WHEN NOT MATCHED
+THEN INSERT (
+    employeeid,
+    city,
+    prev_city
+)
+VALUES (
+    src.employeeid,
+    src.city,
+    NULL
+);
