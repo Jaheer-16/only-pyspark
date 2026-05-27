@@ -1,0 +1,31 @@
+SCD tells us what to do when data changes — replace it, keep it, or store part of it.
+
+SCD1-> Overwrites existing data and does NOT maintain history
+SCD2-> Maintains full history by adding new rows 
+SCD3-> Maintains limited history (only previous value)
+
+NOTE:
+SCD2 WILL ACHEIVE IN MULTIPLE APPROCHES
+->SINGLE STEP APPROCH
+->TWO STEP APPROCH
+->2LEFTSEMI AND 2 LEFTANTI IN PYSPARK 
+
+SINGLE STEP APPROCH:-
+One statement → easy to maintain
+Optimized by engine → faster
+When to use:
+Using Delta Lake / Databricks / modern warehouses
+Tables are large
+Need better performance
+Want clean and simple code
+
+SECOND STEP APPROACH:-
+Need more control/debugging
+Small-to-medium datasets
+Easy to understand
+Step-by-step visibility
+
+LEFTSEMI/LEFTANTI:-
+Need custom complex logic
+Want to control data transformations manually
+Full control over logic
