@@ -1,0 +1,62 @@
+**If we use window functions like sum, avg, lag, or lead with only orderBy and without partitionBy, Spark performs a global ordering. To maintain this order, Spark shuffles all data into a single partition, which eliminates parallelism. As a result, only one executor/core handles the computation, leading to performance degradation, high memory usage, and possible job failure for large datasets.
+
+-------------------------------------------------------------------------------------------------------------
+Driver (splits tasks)
+     ↓
+Cluster Manager (allocates resources)
+     ↓
+Nodes (machines)
+     ↓
+Executors (processes)
+     ↓
+Cores
+     ↓
+Tasks run
+
+The driver is the main Spark program that splits the job into tasks and coordinates execution. The cluster manager allocates resources across multiple nodes. Executors are launched on these nodes, and the driver assigns tasks to executors, which execute them in parallel using their CPU cores.
+
+Each executor executes multiple tasks in parallel using its allocated CPU cores.
+
+NOTE:
+Spark uses executors instead of nodes directly because:
+Executors provide controlled, isolated, and efficient execution of tasks using allocated resources (cores & memory).
+Node is just a hardware where as Executors are Spark-aware processes -Understand tasks
+Execute code
+Manage memory
+Handle failures
+
+Nodes → provide hardware
+Executors → use that hardware intelligently
+Spark → interacts with executors (not nodes directly)
+-------------------------------------------------------------------------------------------------------------
+In real scenarios, coalesce is mainly used when the dataset size becomes small after transformations like filtering or aggregation, and we want to reduce the number of partitions to avoid unnecessary task overhead. It is also commonly used before writing data to control the number of output files and improve efficiency.
+-------------------------------------------------------------------------------------------------------------
+Why does multiline selectExpr sometimes fail?
+
+
+selectExpr() expects each SQL expression as a separate argument. Errors usually occur due to improper SQL formatting, incorrect commas, or multiline string issues,.
+------------------------------------------------------------------------------------------------------------
+dropDuplicates() and distinct() do the same thing, but if we want to remove duplicates based on specific columns, we must use dropDuplicates().
+-------------------------------------------------------------------------------------------------------------
+union() merges two datasets when they have the same number of columns and compatible data types, matching columns by position.
+unionByName() merges datasets based on column names, even if the order is different. If column counts differ, we can use allowMissingColumns=True to fill missing columns with NULL values. note-Both keep duplicates
+----------------------------------------------------------------------------------------------------------------
+DataFrames do not directly support getNumPartitions() because it is an RDD-level method. To check the number of partitions in a DataFrame, we need to access the underlying RDD using df.rdd.getNumPartitions().
+---------------------------------------------------------------------------------------------------------------
+for joins if we use repartition on joining key then same keys in both tables will kept in one partition then shuffling of data will be less so that we can acheive optimization
+---------------------------------------------------------------------------------------------------------------
+In a broadcast join, the smaller dataset is copied to all partitions of the larger dataset. Each partition of the large dataset performs the join locally using the broadcasted data. If matching keys are found, the joined result is produced, eliminating the need for shuffle and improving performance.
+
+ If both datasets are large, we use repartition() on the join key before joining to reduce shuffle and improve performance.
+ If one dataset is small and the other is large, we use broadcast() on the smaller dataset to avoid shuffle completely and perform a faster join.
+---------------------------------------------------------------------------------------------------------------
+
+Repartition can be used as an optimization technique for joins, groupBy, and window functions because all these operations require data with the same key to be processed together. By repartitioning on the key column, we reduce shuffle and improve performance, especially for large datasets.
+---------------------------------------------------------------------------------------------------------------
+We use coalesce() when we want to reduce the number of partitions to avoid unnecessary overhead. It is useful when the dataset becomes smaller after transformations like filter, and also before writing data to control the number of output files.
+
+If my dataset has fewer partitions (e.g., 3) than available CPU cores, I can use repartition() to increase the number of partitions so that more tasks run in parallel and CPU resources are better utilized.
+---------------------------------------------------------------------------------------------------------------
+
+
+
