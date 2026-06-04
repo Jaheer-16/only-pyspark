@@ -1,0 +1,39 @@
+PARTITIONING+Z-ORDER
+
+df.write.format('delta').partitionBy('order_date').save('adlsgen2 location-sales_table')
+
+CREATE TABLE catalog.schema.sales_table
+(customerid STRING,
+ cust_name STRING,
+ order_date DATE)
+USING DELTA
+LOCATION 'adlsgen2 location-sales_table'
+
+df1=spark.table("catalog.schema.sales_table").filter("order_date='2026-06-04'")
+
+Here if we use partitionBy then with that column same dates data stored in one folder withat whenever we filter required folder only scan. Withthat we can acheive optimization techinque by using PartioionBy
+
+if incase we filter on customerid which is primarykey/high cardnity column then Partitioning on high-cardinality column will create too many partitions , in this case we use ZORDER BY withat inside file optimization takes place 
+
+OPTIMIZE sales_table
+ZORDER BY customerid
+
+df1=df.filter("customerid='123'")
+
+
+PartioionBy-->LOW CARDINATED ROWS
+ZORDER BY-->HIGH CARDINATED ROWS
+
+FLOW-->PartioionBy WITH LOW CARDINATED ROWS + APPLY ZORDER FOR THAT
+
+
+OPTIMIZE (SYNTAX->OPTIMIZE TABLE_NAME)
+
+“OPTIMIZE is used to resolve the small file problem in Delta tables. It compacts multiple small files into fewer large files, typically 100MB–1GB, improving scan efficiency and query performance. However, it is beneficial only when small files exist.”
+
+VACCUM
+
+VACUUM table_name;
+VACUUM table_name RETAIN 168 HOURS;
+
+“VACUUM is used to clean up old, unused files in Delta tables after operations like MERGE or OPTIMIZE, helping reduce storage and maintain performance while preserving recent history.”
