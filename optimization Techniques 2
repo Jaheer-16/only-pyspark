@@ -37,3 +37,6 @@ VACUUM table_name;
 VACUUM table_name RETAIN 168 HOURS;
 
 “VACUUM is used to clean up old, unused files in Delta tables after operations like MERGE or OPTIMIZE, helping reduce storage and maintain performance while preserving recent history.”
+
+--------------------------------------------------------------------------------------------------------------------------
+Data skew happens when one or a few Spark partitions contain much more data than the others. Because Spark waits for every task to finish, one large partition can make the complete job slow. I identify skew using key counts and the Spark UI. First, I remove null or invalid hot keys and ensure AQE is enabled. If one join table is small, I use a broadcast join. If both tables are large and a few keys contain too many records, I use salting to distribute those records across multiple partitions.
