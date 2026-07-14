@@ -51,3 +51,15 @@ we need to check spark UI, in that we have spark application,jobs and tasks
 
  To identify data skew in the Spark UI, I locate the slow job and stage and compare task duration, input records, shuffle read, and spill metrics. If one or a few tasks process significantly more data and take much longer than the others, it indicates data skew.”
 ------------------------------------------------------------------------------------------------------------------------
+
+spark.conf.set(
+    "spark.sql.adaptive.enabled",
+    "true"
+)
+
+spark.conf.set(
+    "spark.sql.adaptive.skewJoin.enabled",
+    "true"
+)
+adaptive query execcution should be enabled
+---------------------------------------------------------------------------------------------------------------------
