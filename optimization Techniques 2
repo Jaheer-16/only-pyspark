@@ -44,7 +44,7 @@ Data skew happens when one or a few Spark partitions contain much more data than
 FOR DATA SKEW,
 
 we need to check spark UI, in that we have spark application,jobs and tasks
-->spark application is where we write to code
+->Spark application is the complete running instance of our Spark code
 ->once your code is evaluated(means if you used action like show(),display() on that code) then multiple jobs will be created
 ->And in jobs ,we could see multiple stages
 ->and in each stage we have multiple task, where each task will do a chunk of work parallely
