@@ -1,0 +1,45 @@
+latest record
+
+from pyspark.sql.window import Window
+from pyspark.sql import functions as F
+
+window_spec=Window.partitionBy('cust_id').orderBy(F.col('timestamp').desc())
+
+latest_df=df.withColumn('rn',F.row_number().over(window_spec)).filter(F.col('rn')==1).drop('rn')
+------------------------------------------------------------------------------------------------------------------------------
+2nd highest
+
+from pyspark.sql import functions as F
+from pyspark.sql.window import Window
+
+window_spec=Window.partitionBy('dept').orderBy(F.col('salary').desc())
+
+rank_df=df.withColumn('rnk',F.dense_rank().over(window_spec)).filter(F.col('rnk')==2)
+-------------------------------------------------------------------------------------------------------------------------------
+from pyspark.sql import functions as F
+from pyspark.sql.window import Window
+
+window_spec=Window.orderBy(F.col('salary').desc())
+
+latest_df=df.select('salary').filter(F.col('salary').isNotNull()).distinct().withColumn('rn',F.row_number().over(window_spec))
+--------------------------------------------------------------------------------------------------------------------------------------
+from pyspark.sql import functions as F
+summary_df=df.groupBy('cust_id').agg(F.sum('sales').alias('total_sales),
+                                   F.avg('sales').alias('avg_sales'),
+								   F.max('sales').alias('highest'),
+								   F.min('sales').alias('lowest'))
+								   
+								   OR
+								   
+IF WE ARE PERFORMING ON DIFFERENT COLUMNS DICT IS RECOMMENDED
+
+summary_df=df.groupBy('cust_id').agg({
+                                     'sales':'sum',
+									 'quantity':'avg',
+									 })
+-----------------------------------------------------------------------------------------------------------------------------------
+with dates
+
+dates_df=df.withColumn('dates',F.to_date(F.col('date')))\
+           .withColumn('date_year',F.year(F.col('dates')))
+----------------------------------------------------------------------------------------------------------------------------------
