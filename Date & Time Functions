@@ -37,3 +37,9 @@ Spark will try to parse the string using its default format → "yyyy-MM-dd".
 So if your column contains "2026-04-16", it will successfully convert to a DateType.
 - If the string is in another format (like "04-16-2026" or "16/04/2026"), then you must supply the correct pattern. Otherwise, Spark will return null because it can’t parse the string properly.
 --------------------------------------------------------------------------------------------------------
+spark = (
+       SparkSession.builder\
+	   .appName("appname")\
+	   .master("local[*]")\
+	   .getOrCreate()
+)
