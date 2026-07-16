@@ -13,9 +13,9 @@ Cores
      ↓
 Tasks run
 
-The driver is the main Spark program that splits the job into tasks and coordinates execution. The cluster manager allocates resources across multiple nodes. Executors are launched on these nodes, and the driver assigns tasks to executors, which execute them in parallel using their CPU cores.
-
-Each executor executes multiple tasks in parallel using its allocated CPU cores.
+In Spark architecture, the Driver runs the main Spark application and creates the SparkSession. It converts the application logic into an execution plan and, when an action is triggered, creates jobs and divides them into stages and tasks. Stages are generally separated by shuffle boundaries.
+The Cluster Manager allocates CPU and memory resources and helps launch executors on worker nodes.
+Executors run the tasks assigned by the Driver and store cached and shuffle data. Each executor can run multiple tasks concurrently, usually one task per available CPU core. Each task normally processes one partition of data and reports its status or result to the Driver.
 
 NOTE:
 Spark uses executors instead of nodes directly because:
