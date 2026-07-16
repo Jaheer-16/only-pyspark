@@ -20,3 +20,5 @@ Optimization: Catalyst then applies rules to simplify and optimize that plan (e.
 *You can also run SQL queries directly on DataFrames using spark.sql().
 
 *We use DataFrames because they are schema-aware, optimized by Catalyst and Tungsten, easier to query with SQL-like syntax, and integrate seamlessly with Spark’s ecosystem. They give both developer productivity and performance at scale
+-----------------------------------------------------------------------------------------------------------------
+A Spark DataFrame is an immutable, distributed collection of rows organized into named columns with a schema. It is similar to a relational database table, but the data is divided into partitions and processed in parallel across a Spark cluster. DataFrame transformations such as select, filter, join, groupBy and withColumn are lazily evaluated. Spark builds a logical plan, optimizes it, creates a physical plan and executes it only when an action such as show, count, collect or write is called.
