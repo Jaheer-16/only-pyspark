@@ -28,6 +28,13 @@ Handle failures
 Nodes → provide hardware
 Executors → use that hardware intelligently
 Spark → interacts with executors (not nodes directly)
+
+DAG->
+DAG stands for Directed Acyclic Graph.
+A DAG is a visual execution plan that shows what operations Spark needs to perform, their order, and their dependencies.
+Spark uses the DAG to decide how to execute your transformations efficiently.
+
+The operations flows in one direction and The execution flow does not loop backward so we can say this is acyclic
 -------------------------------------------------------------------------------------------------------------
 In real scenarios, coalesce is mainly used when the dataset size becomes small after transformations like filtering or aggregation, and we want to reduce the number of partitions to avoid unnecessary task overhead. It is also commonly used before writing data to control the number of output files and improve efficiency.
 -------------------------------------------------------------------------------------------------------------
