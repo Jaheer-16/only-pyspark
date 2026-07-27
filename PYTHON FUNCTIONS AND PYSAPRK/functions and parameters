@@ -1,0 +1,151 @@
+null_check_col=['custid','custkey','custview']
+
+null_condition=None
+
+for cols in null_check_col:
+	condition=F.col(cols).isNull()
+ 
+	if null_condition is None:
+     null_condition=condition
+	else:
+     null_condition=null_condition|condition
+  
+null_records_df = df.filter(null_condition)
+  
+null_records_df.show()
+
+
+OR
+
+from pyspark.sql.functions import col
+from functools import reduce
+
+null_check_col=['custid','custkey','custview']
+
+null_condition=reduce(lambda x,y:x|y,[F.col(cols).isNull() for cols in null_check_col])
+
+null_df=df.filter(null_condition)
+
+display(null_df)
+
+
+from pyspark.sql import functions as F
+from functools import reduce
+
+numbers=[1,2,3,4]
+r=reduce(lambda x,y:x+y,[num*2 for num in numbers])
+
+--------------------------------------------------------
+enumerate()
+tables = ["customer", "orders", "products"]
+for index, table_name in enumerate(tables):
+    print(index, table_name)
+-------------------------------------------------------------
+zip()->zip() combines matching items from two or more collections.
+source_columns = [
+    "custid",
+    "custname",
+    "custcity"
+]
+
+target_columns = [
+    "customer_id",
+    "customer_name",
+    "customer_city"
+]
+
+for source_column, target_column in zip(
+    source_columns,
+    target_columns
+):
+    if source_column == target_column:
+        print("Schema check passed")
+    else:
+        print(
+            f"Schema check failed: "
+            f"{source_column} != {target_column}"
+        )
+----------------------------------------------------------
+
+Functions and parameter->to reuse logic dynamically instead of using it for one
+
+null_check_col=['custid','custkey','custview']
+
+def check_null(df,column_name):
+	return df.dropDuplicates(column_name)
+	
+customer_df=check_null
+            (
+				df=customer,
+				column_name=['custid']
+			)
+			
+--------------------
+TO read source files
+--------------------
+def read_source_files(
+    spark,
+    source_path,
+    file_format,
+    options=None
+):
+    reader = spark.read.format(file_format)
+
+    if options:
+        reader = reader.options(**options)
+
+    return reader.load(source_path)
+	
+	
+customer_df = read_source_files(
+    spark=spark,
+    source_path="/Volumes/raw/crm/customer/",
+    file_format="csv",
+    options={
+        "header": "true",
+        "inferSchema": "false",
+        "delimiter": ","
+    }
+)
+
+---------------------
+Type-casting function->Bronze data may contain all columns as strings. In Silver, we need correct data types.
+---------------------
+from pyspark.sql import functions as F
+
+def cast_columns(df, column_type_mapping):
+    for column_name, target_type in column_type_mapping.items():
+        df = df.withColumn(
+            column_name,
+            F.col(column_name).cast(target_type)
+        )
+
+    return df
+	
+customer_cast_mapping = {
+    "customer_id": "long",
+    "date_of_birth": "date",
+    "credit_limit": "decimal(18,2)",
+    "is_active": "boolean",
+    "modified_date": "timestamp"
+}
+
+customer_df = cast_columns(
+    df=standardized_df,
+    column_type_mapping=customer_cast_mapping
+)
+
+----------------------
+Null-handling function
+----------------------
+def fill_null_values(df, default_values):
+    return df.fillna(default_values)
+	
+customer_df = fill_null_values(
+    df=customer_df,
+    default_values={
+        "country": "UNKNOWN",
+        "customer_status": "INACTIVE",
+        "credit_limit": 0
+    }
+)
